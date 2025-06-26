@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - PediaSphere</title>
+  <link rel="stylesheet" href="login.css" />
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCrfyU0RpyYgzMiMgZ_x2bWCh_ocwYuX5A",
+      authDomain: "pediasphere-af39f.firebaseapp.com",
+      projectId: "pediasphere-af39f",
+      storageBucket: "pediasphere-af39f.appspot.com",
+      messagingSenderId: "623089231317",
+      appId: "1:623089231317:web:6d5ae4af5709a0dc32495c",
+      measurementId: "G-5K8NNS55M0"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+
+    window.loginUser = () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const spinner = document.getElementById("spinner");
+      spinner.style.display = "inline-block";
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          spinner.style.display = "none";
+          const user = userCredential.user;
+          if (user.emailVerified) {
+            alert("Login successful!");
+            window.location.href = "dashboard.html";
+          } else {
+            alert("Please verify your email first.");
+          }
+        })
+        .catch((error) => {
+          spinner.style.display = "none";
+          alert(error.message);
+        });
+    };
+
+    window.resetPassword = () => {
+      const email = document.getElementById("email").value;
+      if (!email) {
+        alert("Please enter your email to reset password.");
+        return;
+      }
+
+      sendPasswordResetEmail(auth, email)
+        .then(() => {
+          alert("Password reset link sent to your email.");
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    };
+  </script>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login to PediaSphere</h2>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <label>
+    <input type="checkbox" id="rememberMe" /> Remember Me
+  </label>
+    <button onclick="loginUser()">Login <span id="spinner" class="spinner"></span></button>
+
+    <p><a href="#" onclick="resetPassword()">Forgot Password?</a></p>
+    <p>Don’t have an account? <a href="signup.html">Sign up</a></p>
+    <button onclick="window.location.href='index.html'" class="back-btn">← Back to Home</button>
+  </div>
+  <script type="module" src="login.js"></script>
+<p id="error-message" style="color: red;"></p>
+</body>
+</html>

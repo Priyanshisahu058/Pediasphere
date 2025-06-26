@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immunization Schedule - PediaSphere</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .logo span {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: calc(100vh - 140px);
+        }
+
+        /* Page Title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .page-title h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-title p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Child Info Card */
+        .child-info {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .child-info h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .child-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .detail-item {
+            background: #f8f9ff;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .detail-item strong {
+            color: #667eea;
+        }
+
+        /* Vaccination Cards */
+        .vaccination-timeline {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .age-group {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .age-group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .age-group.completed {
+            border-left: 6px solid #4CAF50;
+        }
+
+        .age-group.upcoming {
+            border-left: 6px solid #FF9800;
+        }
+
+        .age-group.overdue {
+            border-left: 6px solid #F44336;
+        }
+
+        .age-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .age-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-badge.completed {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .status-badge.upcoming {
+            background: #FF9800;
+            color: white;
+        }
+
+        .status-badge.overdue {
+            background: #F44336;
+            color: white;
+        }
+
+        .vaccines-grid {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .vaccine-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem;
+            background: #f8f9ff;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .vaccine-item:hover {
+            background: #e8f0fe;
+        }
+
+        .vaccine-checkbox {
+            margin-right: 1rem;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .vaccine-checkbox:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .vaccine-info {
+            flex: 1;
+        }
+
+        .vaccine-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.2rem;
+        }
+
+        .vaccine-disease {
+            font-size: 0.9rem;
+            color: #666;
+            font-style: italic;
+        }
+
+        .vaccine-notes {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: #fff3cd;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+            font-size: 0.9rem;
+            color: #856404;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 0;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #667eea;
+            transition: color 0.3s ease, transform 0.3s ease;
+            padding: 0.5rem;
+        }
+
+        .nav-item:hover {
+            color: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active {
+            color: #5a67d8;
+            font-weight: bold;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 0.2rem;
+            fill: currentColor;
+        }
+
+        .nav-text {
+            font-size: 0.8rem;
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .progress-percentage {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .progress-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0.8rem;
+            background: #f8f9ff;
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 0.2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 2rem;
+            }
+
+            .child-details {
+                grid-template-columns: 1fr;
+            }
+
+            .age-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .progress-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <img src="logo.png" alt="PediaSphere Logo">
+                <span>PediaSphere</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Page Title -->
+        <div class="page-title">
+            <h1>💉 Immunization Schedule</h1>
+            <p>Track your child's vaccination journey</p>
+        </div>
+
+        <!-- Child Information -->
+        <div class="child-info">
+            <h2>👶 Child Information</h2>
+            <div class="child-details">
+                <div class="detail-item">
+                    <strong>Name:</strong> <span id="childName">Loading...</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Date of Birth:</strong> <span id="childDOB">Loading...</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Current Age:</strong> <span id="childAge">Loading...</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Gender:</strong> <span id="childGender">Loading...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <div class="progress-title">Vaccination Progress</div>
+                <div class="progress-percentage" id="progressPercentage">0%</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="completedCount">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="upcomingCount">0</div>
+                    <div class="stat-label">Upcoming</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalCount">0</div>
+                    <div class="stat-label">Total</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vaccination Timeline -->
+        <div class="vaccination-timeline" id="vaccinationTimeline">
+            <!-- Birth -->
+            <div class="age-group completed">
+                <div class="age-header">
+                    <div class="age-title">At Birth</div>
+                    <div class="status-badge completed">Completed</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">BCG</div>
+                            <div class="vaccine-disease">Protects against: Tuberculosis</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Hepatitis B (1st Dose)</div>
+                            <div class="vaccine-disease">Protects against: Hepatitis B</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">OPV (Birth Dose)</div>
+                            <div class="vaccine-disease">Protects against: Polio</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Vitamin K</div>
+                            <div class="vaccine-disease">Protects against: Bleeding Disorders</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: Given within 24 hours of birth
+                </div>
+            </div>
+
+            <!-- 6 Weeks -->
+            <div class="age-group completed">
+                <div class="age-header">
+                    <div class="age-title">6 Weeks (1.5 Months)</div>
+                    <div class="status-badge completed">Completed</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">DPT (1st)</div>
+                            <div class="vaccine-disease">Protects against: Diphtheria, Tetanus, Pertussis</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">OPV (1st)</div>
+                            <div class="vaccine-disease">Protects against: Polio</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">IPV (1st)</div>
+                            <div class="vaccine-disease">Protects against: Polio (Injectable)</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Hepatitis B (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Hepatitis B</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox" >
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Hib (1st)</div>
+                            <div class="vaccine-disease">Protects against: Haemophilus influenzae type b</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">PCV (1st)</div>
+                            <div class="vaccine-disease">Protects against: Pneumococcal Disease</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Rotavirus (1st)</div>
+                            <div class="vaccine-disease">Protects against: Rotavirus Gastroenteritis</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: First major vaccination visit
+                </div>
+            </div>
+
+            <!-- 10 Weeks -->
+            <div class="age-group upcoming">
+                <div class="age-header">
+                    <div class="age-title">10 Weeks (2.5 Months)</div>
+                    <div class="status-badge upcoming">Upcoming</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">DPT (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Diphtheria, Tetanus, Pertussis</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">OPV (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Polio</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">IPV (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Polio (Injectable)</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Hib (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Haemophilus influenzae type b</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">PCV (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Pneumococcal Disease</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Rotavirus (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Rotavirus Gastroenteritis</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: Second dose of primary series
+                </div>
+            </div>
+
+            <!-- 14 Weeks -->
+            <div class="age-group upcoming">
+                <div class="age-header">
+                    <div class="age-title">14 Weeks (3.5 Months)</div>
+                    <div class="status-badge upcoming">Upcoming</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">DPT (3rd)</div>
+                            <div class="vaccine-disease">Protects against: Diphtheria, Tetanus, Pertussis</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">OPV (3rd)</div>
+                            <div class="vaccine-disease">Protects against: Polio</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">IPV (3rd)</div>
+                            <div class="vaccine-disease">Protects against: Polio (Injectable)</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Hepatitis B (3rd)</div>
+                            <div class="vaccine-disease">Protects against: Hepatitis B</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Hib (3rd)</div>
+                            <div class="vaccine-disease">Protects against: Haemophilus influenzae type b</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">PCV (3rd)</div>
+                            <div class="vaccine-disease">Protects against: Pneumococcal Disease</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Rotavirus (3rd)</div>
+                            <div class="vaccine-disease">Protects against: Rotavirus Gastroenteritis</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: Completion of primary series for most vaccines
+                </div>
+            </div>
+
+            <!-- 6 Months -->
+            <div class="age-group upcoming">
+                <div class="age-header">
+                    <div class="age-title">6 Months</div>
+                    <div class="status-badge upcoming">Upcoming</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Influenza (Annual)</div>
+                            <div class="vaccine-disease">Protects against: Seasonal Flu</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Hepatitis B (4th - if needed)</div>
+                            <div class="vaccine-disease">Protects against: Hepatitis B</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Typhoid Conjugate Vaccine (TCV)</div>
+                            <div class="vaccine-disease">Protects against: Typhoid</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: Start annual flu vaccination; TCV can be given from 6 months
+                </div>
+            </div>
+
+            <!-- 9 Months -->
+            <div class="age-group upcoming">
+                <div class="age-header">
+                    <div class="age-title">9 Months</div>
+                    <div class="status-badge upcoming">Upcoming</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Measles (1st)</div>
+                            <div class="vaccine-disease">Protects against: Measles</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Japanese Encephalitis (1st)</div>
+                            <div class="vaccine-disease">Protects against: Japanese Encephalitis</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Influenza (if due)</div>
+                            <div class="vaccine-disease">Protects against: Seasonal Flu</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: First measles vaccine
+                </div>
+            </div>
+
+            <!-- 12 Months -->
+            <div class="age-group upcoming">
+                <div class="age-header">
+                    <div class="age-title">12 Months (1 Year)</div>
+                    <div class="status-badge upcoming">Upcoming</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">MMR (1st)</div>
+                            <div class="vaccine-disease">Protects against: Measles, Mumps, Rubella</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Varicella (1st)</div>
+                            <div class="vaccine-disease">Protects against: Chickenpox</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Hepatitis A (1st)</div>
+                            <div class="vaccine-disease">Protects against: Hepatitis A</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">PCV Booster</div>
+                            <div class="vaccine-disease">Protects against: Pneumococcal Disease</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Japanese Encephalitis (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Japanese Encephalitis</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Typhoid Booster</div>
+                            <div class="vaccine-disease">Protects against: Typhoid</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: Major milestone - multiple new vaccines introduced
+                </div>
+            </div>
+
+            <!-- Continue with more age groups... -->
+            <!-- 15 Months -->
+            <div class="age-group upcoming">
+                <div class="age-header">
+                    <div class="age-title">15 Months</div>
+                    <div class="status-badge upcoming">Upcoming</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">DPT Booster (1st)</div>
+                            <div class="vaccine-disease">Protects against: Diphtheria, Tetanus, Pertussis</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">OPV Booster</div>
+                            <div class="vaccine-disease">Protects against: Polio</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Hib Booster</div>
+                            <div class="vaccine-disease">Protects against: Haemophilus influenzae type b</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Varicella (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Chickenpox</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">MMR (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Measles, Mumps, Rubella</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: Important booster doses
+                </div>
+            </div>
+
+            <!-- 18 Months -->
+            <div class="age-group upcoming">
+                <div class="age-header">
+                    <div class="age-title">18 Months</div>
+                    <div class="status-badge upcoming">Upcoming</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Hepatitis A (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Hepatitis A</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Annual Influenza</div>
+                            <div class="vaccine-disease">Protects against: Seasonal Flu</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Meningococcal A (MenA)</div>
+                            <div class="vaccine-disease">Protects against: Meningococcal A Disease</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: Complete Hepatitis A series
+                </div>
+            </div>
+
+            <!-- 2 Years -->
+            <div class="age-group upcoming">
+                <div class="age-header">
+                    <div class="age-title">2 Years (24 Months)</div>
+                    <div class="status-badge upcoming">Upcoming</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Typhoid Booster</div>
+                            <div class="vaccine-disease">Protects against: Typhoid</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Meningococcal ACWY</div>
+                            <div class="vaccine-disease">Protects against: Meningococcal Disease</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Annual Influenza</div>
+                            <div class="vaccine-disease">Protects against: Seasonal Flu</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">PCV Booster (if needed)</div>
+                            <div class="vaccine-disease">Protects against: Pneumococcal Disease</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: Toddler boosters and new vaccines
+                </div>
+            </div>
+
+            <!-- 4-6 Years -->
+            <div class="age-group upcoming">
+                <div class="age-header">
+                    <div class="age-title">4-6 Years (48-72 Months)</div>
+                    <div class="status-badge upcoming">Upcoming</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">DPT Booster (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Diphtheria, Tetanus, Pertussis</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">OPV Booster (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Polio</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">MMR Booster</div>
+                            <div class="vaccine-disease">Protects against: Measles, Mumps, Rubella</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Varicella Booster</div>
+                            <div class="vaccine-disease">Protects against: Chickenpox</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Annual Influenza</div>
+                            <div class="vaccine-disease">Protects against: Seasonal Flu</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">IPV Booster</div>
+                            <div class="vaccine-disease">Protects against: Polio</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: School entry requirements - critical boosters
+                </div>
+            </div>
+
+            <!-- 9-14 Years -->
+            <div class="age-group upcoming">
+                <div class="age-header">
+                    <div class="age-title">9-14 Years (108-168 Months)</div>
+                    <div class="status-badge upcoming">Upcoming</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">HPV (1st)</div>
+                            <div class="vaccine-disease">Protects against: Human Papillomavirus</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Tdap</div>
+                            <div class="vaccine-disease">Protects against: Tetanus, Diphtheria, Pertussis</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Meningococcal Booster</div>
+                            <div class="vaccine-disease">Protects against: Meningococcal Disease</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Annual Influenza</div>
+                            <div class="vaccine-disease">Protects against: Seasonal Flu</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Hepatitis B Booster (if needed)</div>
+                            <div class="vaccine-disease">Protects against: Hepatitis B</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: Adolescent vaccines - HPV series begins
+                </div>
+            </div>
+
+            <!-- 11-12 Years -->
+            <div class="age-group upcoming">
+                <div class="age-header">
+                    <div class="age-title">11-12 Years (132-144 Months)</div>
+                    <div class="status-badge upcoming">Upcoming</div>
+                </div>
+                <div class="vaccines-grid">
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">HPV (2nd)</div>
+                            <div class="vaccine-disease">Protects against: Human Papillomavirus</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Tdap Booster</div>
+                            <div class="vaccine-disease">Protects against: Tetanus, Diphtheria, Pertussis</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Meningococcal ACWY</div>
+                            <div class="vaccine-disease">Protects against: Meningococcal Disease</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Annual Influenza</div>
+                            <div class="vaccine-disease">Protects against: Seasonal Flu</div>
+                        </div>
+                    </div>
+                    <div class="vaccine-item">
+                        <input type="checkbox" class="vaccine-checkbox">
+                        <div class="vaccine-info">
+                            <div class="vaccine-name">Typhoid Booster</div>
+                            <div class="vaccine-disease">Protects against: Typhoid</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="vaccine-notes">
+                    📝 Note: Pre-teen vaccination schedule
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-content">
+            <a href="dashboard.html" class="nav-item">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                </svg>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="dietchart.html" class="nav-item">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.66 3.84 3.75 3.97L6.5 13h2.5v7h2v-7h2.5l-.25-.03C14.34 12.84 16 11.12 16 9V2h-2v7h-2V2h-2v7zm5-3v8h2.5l1.5 1.5L21.5 14H24v-2h-2.5L20 10.5 18.5 12H16V6h2z"/>
+                </svg>
+                <span class="nav-text">Diet Chart</span>
+            </a>
+            <a href="#" class="nav-item active">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span class="nav-text">Immunization</span>
+            </a>
+            <a href="consult.html" class="nav-item">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span class="nav-text">Consult</span>
+            </a>
+        </div>
+    </nav>
+    <script type="module" src="immunisation.js"></script>
+</body>
+</html>

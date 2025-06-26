@@ -1,0 +1,147 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PediaSphere</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header class="header">
+    <div class="logo-container">
+      <img src="logo.png" alt="Logo" class="logo">
+      <span class="site-title">PediaSphere</span>
+    </div>
+    <div class="header-right">
+      <button class="btn btn-outline-primary me-2"><a href="login.html">Login</a></button>
+      <button class="btn btn-primary"><a href="signup.html">Sign up</a></button>
+      <button class="btn btn-dark ms-3" onclick="toggleDarkMode()">🌓</button>
+    </div>
+  </header>  <section class="hero">
+    <h1>Guiding you through every guiding steps</h1>
+    <h3>From curiosity to clarity-instantly</h3>
+    <p>Nutrition and immunization form the foundation of a child’s optimal growth and lifelong health. Adequate nutrition supports physical development, cognitive function, and a resilient immune system, while timely vaccinations safeguard against serious illnesses and reduce future healthcare burdens. Early awareness and proactive monitoring lead to fewer complications in adulthood. PediaSphere offers comprehensive, reliable information through an intuitive and engaging platform—empowering parents to give their children the care they truly deserve.
+    </p>
+  </section>  <section class="why-use">
+  <h2>Why Use PediaSphere?</h2>
+
+  <div class="feature-line">
+    <div class="icon-text">
+      <i class="fas fa-apple-alt icon"></i>
+      <p><strong>Promotes healthy nutrition habits in children.</strong></p>
+    </div>
+    <img src="nutrition.png" alt="Nutrition" class="feature-img">
+  </div>
+
+  <div class="feature-line">
+    <div class="icon-text">
+      <i class="fas fa-syringe icon"></i>
+      <p><strong>Keeps track of all vaccinations and schedules.</strong></p>
+    </div>
+    <img src="vaccine.png" alt="Vaccination" class="feature-img">
+  </div>
+
+  <div class="feature-line">
+    <div class="icon-text">
+      <i class="fas fa-chart-line icon"></i>
+      <p><strong>Monitors growth and developmental progress.</strong></p>
+    </div>
+    <img src="growth.png" alt="Growth Tracking" class="feature-img">
+  </div>
+
+  <div class="feature-line">
+    <div class="icon-text">
+      <i class="fas fa-user-md icon"></i>
+      <p><strong>Connect with expert pediatricians anytime.</strong></p>
+    </div>
+    <img src="doctor.png" alt="Doctor Consultation" class="feature-img">
+  </div>
+</section> <section id="help">
+  <div class="help-container">
+    <h2>How Can We help?</h2>
+
+    <div class="help-feature-line">
+      <div class="icon-text">
+        <i class="fas fa-mobile-alt icon"></i>
+        <p>User-Friendly App Interface</p>
+      </div>
+      <img src="app-interface.jpg" class="help-feature-img" alt="App Interface">
+    </div>
+
+    <div class="help-feature-line">
+      <div class="icon-text">
+        <i class="fas fa-bell icon"></i>
+        <p>Timely Health Reminders</p>
+      </div>
+      <img src="reminder.jpg" class="help-feature-img" alt="Reminder">
+    </div>
+
+    <div class="help-feature-line">
+      <div class="icon-text">
+        <i class="fas fa-file-medical icon"></i>
+        <p>Easy Health Record Access</p>
+      </div>
+      <img src="records.jpg" class="help-feature-img" alt="Records">
+    </div>
+
+    <div class="help-feature-line">
+      <div class="icon-text">
+        <i class="fas fa-child icon"></i>
+        <p>Track Your Child’s Development</p>
+      </div>
+      <img src="development.jpg" class="help-feature-img" alt="development"
+    </div>
+  </div>
+</section>
+      
+  <footer>
+  <div class="footer-grid">
+    <!-- Left -->
+    <div class="footer-column footer-left">
+      <h4>About Us</h4>
+      <p>Pediasphere is a child-centric health and wellness platform offering consultations, learning tools, and AI support for holistic development.</p>
+    </div>
+
+    <!-- Center -->
+    <div class="footer-column footer-center">
+      <h4>Follow Us</h4>
+      <div class="social-icons">
+        <a href="#"><i class="fab fa-facebook"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-linkedin"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+
+    <!-- Right -->
+    <div class="footer-column footer-right">
+      <h4>Privacy Policy</h4>
+      <a href="#">View our privacy policy</a>
+      <a href="#">Terms & Conditions</a>
+    </div>
+  </div>
+</footer>
+        <div class="col-md-4">
+          <h5>Follow Us</h5>
+          <a href="#" class="text-white me-2"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="text-white me-2"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="text-white me-2"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="text-white me-2"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+  </section>  <nav class="bottom-nav">
+    <!-- Bottom Navbar -->
+<nav class="bottom-navbar">
+  <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
+  <a href="dietchart.html"><i class="fas fa-apple-alt"></i> Diet Chart</a>
+  <a href="immunisation.html"><i class="fas fa-syringe"></i> Immunisation</a>
+  <a href="consult.html" target="_blank"><i class="fas fa-user-md"></i> Consult Doctor</a>
+</nav>
+  </nav>  <script>
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+  </script></body>
+</html>

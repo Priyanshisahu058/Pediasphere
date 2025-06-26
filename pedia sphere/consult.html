@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Consult Doctor – PediaSphere</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <img src="logo.png" alt="PediaSphere Logo" class="logo" />
+    <h1>Consult a Doctor</h1>
+  </header>
+
+  <!-- Consultation Form -->
+  <main class="consult-section">
+    <h2>Book a Consultation</h2>
+    <p>Get expert pediatric advice. Fill the form below to request a consultation:</p>
+
+    <form class="consult-form">
+      <label for="name">Parent's Name:</label>
+      <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+      <label for="childName">Child's Name:</label>
+      <input type="text" id="childName" name="childName" placeholder="Enter child's name" required>
+
+      <label for="age">Child's Age:</label>
+      <input type="number" id="age" name="age" min="0" max="18" required>
+
+      <label for="date">Preferred Date:</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="concern">Concern / Symptoms:</label>
+      <textarea id="concern" name="concern" placeholder="Write your query here..." required></textarea>
+
+      <button type="submit">Request Consultation</button>
+    </form>
+  </main>
+
+  <!-- Bottom Navbar -->
+  <nav class="bottom-navbar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="diet-chart.html">Diet Chart</a>
+    <a href="immunisation.html">Immunisation</a>
+    <a href="consult.html" class="active">Consult Doctor</a>
+  </nav>
+
+</body>
+</html>
