@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PediaSphere - Smart Shopping Guide</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .powered-by {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .affiliate-disclosure {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.8em;
+            opacity: 0.9;
+        }
+
+        .form-section {
+            padding: 40px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .input-group input,
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
+        }
+
+        .get-recommendations-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .get-recommendations-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .get-recommendations-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4ecdc4;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results-section {
+            padding: 0 40px 40px;
+            display: none;
+        }
+
+        .recommendation-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 5px solid #4ecdc4;
+            transition: all 0.3s ease;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .recommendation-card:hover {
+            transform: translateX(5px) translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .product-name {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .product-rating {
+            background: #ffd700;
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .product-details {
+            margin-bottom: 20px;
+        }
+
+        .detail-section {
+            margin-bottom: 15px;
+        }
+
+        .detail-section h4 {
+            color: #4ecdc4;
+            margin-bottom: 8px;
+            font-size: 1em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .detail-section p {
+            color: #666;
+            line-height: 1.6;
+            margin-left: 20px;
+        }
+
+        .safety {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .amazon-btn {
+            background: #ff9500;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .amazon-btn:hover {
+            background: #e6851f;
+        }
+
+        .flipkart-btn {
+            background: #047bd6;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+            flex: 1;
+            text-align: center;
+            min-width: 200px;
+        }
+
+        .flipkart-btn:hover {
+            background: #0361a3;
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e8;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .product-actions {
+                flex-direction: column;
+            }
+            
+            .amazon-btn,
+            .flipkart-btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛍️ Smart Shopping Guide</h1>
+            <p>Get personalized product recommendations for your little one</p>
+            <div class="powered-by">
+                🤖 Powered by Groq AI Technology
+            </div>
+            <div class="affiliate-disclosure">
+                💡 As an Amazon Associate, we earn from qualifying purchases
+            </div>
+        </div>
+
+        <div class="form-section">
+            <form id="shoppingForm">
+                <div class="input-group">
+                    <label for="childAge">👶 Child's Age</label>
+                    <select id="childAge" required>
+                        <option value="">Select age</option>
+                        <option value="0-3">0-3 months (Newborn)</option>
+                        <option value="3-6">3-6 months</option>
+                        <option value="6-9">6-9 months</option>
+                        <option value="9-12">9-12 months</option>
+                        <option value="12-18">12-18 months</option>
+                        <option value="18-24">18-24 months</option>
+                        <option value="24+">2+ years</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="category">🎯 Product Category</label>
+                    <select id="category" required>
+                        <option value="">Select category</option>
+                        <option value="toys">🧸 Toys & Games</option>
+                        <option value="books">📚 Books & Learning</option>
+                        <option value="clothing">👕 Clothing & Accessories</option>
+                        <option value="feeding">🍼 Feeding & Nutrition</option>
+                        <option value="health">🏥 Health & Safety</option>
+                        <option value="outdoor">🌳 Outdoor & Sports</option>
+                        <option value="electronics">📱 Electronics & Gadgets</option>
+                        <option value="furniture">🛏️ Furniture & Decor</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="productQuery">🔍 Specific Requirements (Optional)</label>
+                    <textarea id="productQuery" rows="3" placeholder="e.g., educational toys for brain development, organic cotton clothes, BPA-free bottles"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label for="budget">💰 Budget Range</label>
+                    <select id="budget">
+                        <option value="">Any budget</option>
+                        <option value="0-500">₹0 - ₹500</option>
+                        <option value="500-1000">₹500 - ₹1,000</option>
+                        <option value="1000-2000">₹1,000 - ₹2,000</option>
+                        <option value="2000+">₹2,000+</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="get-recommendations-btn" id="submitBtn">
+                    ✨ Get Smart Recommendations
+                </button>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <p>🤖 Groq AI is analyzing the best products for your child...</p>
+            </div>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <h2 style="text-align: center; margin-bottom: 30px; color: #333;">
+                🎯 AI-Recommended Products
+            </h2>
+            <div id="recommendationsContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Groq AI Shopping Guide
+        class GroqShoppingGuide {
+            constructor() {
+                // Configuration for Groq API
+                this.groqConfig = {
+                    apiKey: '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',
+                    apiUrl: 'https://api.groq.com/openai/v1/chat/completions',
+                    model: 'llama3-8b-8192', // Using Llama 3 8B model
+                    maxTokens: 2000,
+                    temperature: 0.7
+                };
+                console.log('🤖 Groq Shopping Guide initialized');
+            }
+
+            async getRecommendations(ageGroup, category, query = '', budget = '') {
+                try {
+                    console.log('🔍 Generating recommendations with Groq AI:', { ageGroup, category, query, budget });
+                    
+                    const prompt = this.createPrompt(ageGroup, category, query, budget);
+                    
+                    const response = await this.callGroqAPI(prompt);
+                    const recommendations = this.parseGroqResponse(response);
+                    
+                    console.log(`✅ Generated ${recommendations.length} recommendations`);
+                    return recommendations;
+                    
+                } catch (error) {
+                    console.error('❌ Groq AI error:', error);
+                    return this.getFallbackRecommendations(category, ageGroup);
+                }
+            }
+
+            createPrompt(ageGroup, category, query, budget) {
+                const budgetText = budget ? `within budget range ₹${budget.replace('-', ' to ₹')}` : 'any budget';
+                const queryText = query ? `with specific focus on: ${query}` : '';
+                
+                return `You are an expert child product consultant in India. Recommend exactly 4 excellent ${category} products for a child aged ${ageGroup} ${budgetText} ${queryText}.
+
+IMPORTANT: Respond with ONLY a valid JSON array. No other text before or after. Each product must have these exact fields:
+
+[
+  {
+    "name": "Product name (real, available in India)",
+    "description": "Brief 1-2 sentence description",
+    "benefits": "Key developmental benefits",
+    "priceRange": "₹XX - ₹XX (realistic Indian prices)",
+    "rating": "X.X/5",
+    "safetyTips": "Important safety information",
+    "amazonKeywords": "search terms for Amazon India",
+    "flipkartKeywords": "search terms for Flipkart"
+  }
+]
+
+Focus on products that are:
+- Age-appropriate and safe for ${ageGroup}
+- Available in Indian market (Amazon.in, Flipkart)
+- Well-reviewed by Indian parents
+- Good value for money
+- Developmentally beneficial
+
+Return ONLY the JSON array, nothing else.`;
+            }
+
+            async callGroqAPI(prompt) {
+                const response = await fetch(this.groqConfig.apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${this.groqConfig.apiKey}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: this.groqConfig.model,
+                        messages: [
+                            {
+                                role: 'user',
+                                content: prompt
+                            }
+                        ],
+                        max_tokens: this.groqConfig.maxTokens,
+                        temperature: this.groqConfig.temperature
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Groq API error: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                return data.choices[0].message.content;
+            }
+
+            parseGroqResponse(response) {
+                try {
+                    // Clean the response - remove any markdown formatting
+                    let cleanResponse = response.trim();
+                    if (cleanResponse.startsWith('```json')) {
+                        cleanResponse = cleanResponse.replace(/```json\n?/, '').replace(/\n?```$/, '');
+                    }
+                    if (cleanResponse.startsWith('```')) {
+                        cleanResponse = cleanResponse.replace(/```\n?/, '').replace(/\n?```$/, '');
+                    }
+                    
+                    const recommendations = JSON.parse(cleanResponse);
+                    
+                    // Validate the response
+                    if (!Array.isArray(recommendations)) {
+                        throw new Error('Response is not an array');
+                    }
+                    
+                    // Ensure each recommendation has required fields
+                    const validRecommendations = recommendations.filter(rec => 
+                        rec.name && rec.description && rec.benefits && rec.priceRange
+                    ).map(rec => ({
+                        name: rec.name || 'Product Name',
+                        description: rec.description || 'Great product for children',
+                        benefits: rec.benefits || 'Supports child development',
+                        priceRange: rec.priceRange || '₹500 - ₹1000',
+                        rating: rec.rating || '4.5/5',
+                        safetyTips: rec.safetyTips || 'Follow manufacturer guidelines for safe use',
+                        amazonKeywords: rec.amazonKeywords || rec.name,
+                        flipkartKeywords: rec.flipkartKeywords || rec.name
+                    }));
+                    
+                    return validRecommendations.slice(0, 4);
+                    
+                } catch (error) {
+                    console.error('Error parsing Groq response:', error);
+                    console.log('Raw response:', response);
+                    throw error;
+                }
+            }
+
+            getFallbackRecommendations(category, ageGroup) {
+                const fallbackData = {
+                    toys: {
+                        name: "Educational Building Blocks Set",
+                        description: "Colorful, safe building blocks designed for creative play and learning.",
+                        benefits: "Enhances motor skills, creativity, spatial awareness, and problem-solving abilities.",
+                        priceRange: "₹400 - ₹800",
+                        rating: "4.5/5",
+                        safetyTips: "BPA-free materials, large size prevents choking, smooth edges for safety.",
+                        amazonKeywords: "educational building blocks kids safe",
+                        flipkartKeywords: "baby building blocks educational toys"
+                    },
+                    books: {
+                        name: "Interactive Picture Books Set",
+                        description: "Colorful picture books with engaging stories and illustrations.",
+                        benefits: "Develops language skills, imagination, cognitive development, and reading habits.",
+                        priceRange: "₹300 - ₹600",
+                        rating: "4.6/5",
+                        safetyTips: "Non-toxic inks, durable pages, rounded corners for child safety.",
+                        amazonKeywords: "children picture books interactive learning",
+                        flipkartKeywords: "kids story books educational"
+                    },
+                    feeding: {
+                        name: "BPA-Free Feeding Set",
+                        description: "Complete feeding set with plates, cups, and utensils for safe feeding.",
+                        benefits: "Promotes self-feeding, made with safe materials, easy to clean and use.",
+                        priceRange: "₹500 - ₹900",
+                        rating: "4.4/5",
+                        safetyTips: "BPA-free plastic, microwave safe, dishwasher friendly, no sharp edges.",
+                        amazonKeywords: "baby feeding set BPA free safe",
+                        flipkartKeywords: "toddler feeding plates cups"
+                    }
+                };
+
+                const template = fallbackData[category] || fallbackData.toys;
+                
+                return [
+                    {
+                        ...template,
+                        name: `${template.name} for ${ageGroup}`
+                    }
+                ];
+            }
+        }
+
+        // UI Management
+        class ShoppingGuideUI {
+            constructor() {
+                this.groqGuide = new GroqShoppingGuide();
+                this.initializeEventListeners();
+                console.log('🎨 UI initialized with Groq AI');
+            }
+
+            initializeEventListeners() {
+                const form = document.getElementById('shoppingForm');
+                if (form) {
+                    form.addEventListener('submit', (e) => this.handleFormSubmit(e));
+                }
+            }
+
+            async handleFormSubmit(event) {
+                event.preventDefault();
+
+                const childAge = document.getElementById('childAge').value;
+                const category = document.getElementById('category').value;
+                const productQuery = document.getElementById('productQuery').value.trim();
+                const budget = document.getElementById('budget').value;
+
+                if (!childAge || !category) {
+                    this.showError('Please select child age and product category');
+                    return;
+                }
+
+                this.showLoading(true);
+                this.hideError();
+                this.hideSuccess();
+                this.hideResults();
+
+                try {
+                    const recommendations = await this.groqGuide.getRecommendations(
+                        childAge, category, productQuery, budget
+                    );
+
+                    if (recommendations.length > 0) {
+                        this.displayRecommendations(recommendations);
+                        this.showSuccess(`Groq AI found ${recommendations.length} perfect products for your child!`);
+                    } else {
+                        this.showError('No products found. Please try different criteria.');
+                    }
+
+                } catch (error) {
+                    console.error('❌ Error:', error);
+                    this.showError('Unable to get AI recommendations. Please try again or check your internet connection.');
+                } finally {
+                    this.showLoading(false);
+                }
+            }
+
+            displayRecommendations(recommendations) {
+                const container = document.getElementById('recommendationsContainer');
+                if (!container) return;
+
+                container.innerHTML = '';
+
+                recommendations.forEach((product, index) => {
+                    const card = this.createProductCard(product, index);
+                    container.appendChild(card);
+                });
+
+                this.showResults();
+                this.scrollToResults();
+            }
+
+            createProductCard(product, index) {
+                const card = document.createElement('div');
+                card.className = 'recommendation-card';
+                card.style.animationDelay = `${index * 0.1}s`;
+
+                card.innerHTML = `
+                    <div class="product-header">
+                        <h3 class="product-name">${this.escapeHtml(product.name)}</h3>
+                        <span class="product-rating">⭐ ${this.escapeHtml(product.rating || '4.5/5')}</span>
+                    </div>
+                    
+                    <div class="product-details">
+                        <div class="detail-section">
+                            <h4>📝 Description</h4>
+                            <p>${this.escapeHtml(product.description)}</p>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h4>✨ Key Benefits</h4>
+                            <p>${this.escapeHtml(product.benefits)}</p>
+                        </div>
+                        
+                        <div class="detail-section">
+                            <h4>💰 Price Range</h4>
+                            <p>${this.escapeHtml(product.priceRange)}</p>
+                        </div>
+                        
+                        <div class="detail-section safety">
+                            <h4>🛡️ Safety Information</h4>
+                            <p>${this.escapeHtml(product.safetyTips)}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="product-actions">
+                        <a href="https://amazon.in/s?k=${encodeURIComponent(product.amazonKeywords || product.name)}&tag=pediasphere58-21" 
+                           target="_blank" class="amazon-btn">
+                            🛒 Buy on Amazon
+                        </a>
+                        <a href="https://flipkart.com/search?q=${encodeURIComponent(product.flipkartKeywords || product.name)}" 
+                           target="_blank" class="flipkart-btn">
+                            🛍️ Buy on Flipkart
+                        </a>
+                    </div>
+                `;
+
+                return card;
+            }
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            showLoading(show) {
+                const loading = document.getElementById('loading');
+                const submitBtn = document.getElementById('submitBtn');
+                
+                if (loading) loading.style.display = show ? 'block' : 'none';
+                if (submitBtn) submitBtn.disabled = show;
+            }
+
+            showResults() {
+                const results = document.getElementById('resultsSection');
+                if (results) results.style.display = 'block';
+            }
+
+            hideResults() {
+                const results = document.getElementById('resultsSection');
+                if (results) results.style.display = 'none';
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('errorMessage');
+                if (errorDiv) {
+                    errorDiv.textContent = message;
+                    errorDiv.style.display = 'block';
+                }
+            }
+
+            hideError() {
+                const errorDiv = document.getElementById('errorMessage');
+                if (errorDiv) errorDiv.style.display = 'none';
+            }
+
+            showSuccess(message) {
+                const successDiv = document.getElementById('successMessage');
+                if (successDiv) {
+                    successDiv.textContent = message;
+                    successDiv.style.display = 'block';
+                }
+            }
+
+            hideSuccess() {
+                const successDiv = document.getElementById('successMessage');
+                if (successDiv) successDiv.style.display = 'none';
+            }
+
+            scrollToResults() {
+                const results = document.getElementById('resultsSection');
+                if (results) {
+                    results.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Initializing Groq-powered Shopping Guide...');
+            new ShoppingGuideUI();
+        });
+    </script>
+</body>
+</html>
