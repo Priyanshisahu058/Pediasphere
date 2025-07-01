@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - PediaSphere</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login to PediaSphere</h2>
+    <input type="email" id="email" placeholder="Email" required />
+    <input type="password" id="password" placeholder="Password" required />
+    <label>
+    <input type="checkbox" id="rememberMe" /> Remember Me
+  </label>
+    <button onclick="loginUser()">Login <span id="spinner" class="spinner"></span></button>
+
+    <p><a href="#" onclick="resetPassword()">Forgot Password?</a></p>
+    <p>Don’t have an account? <a href="signup.html">Sign up</a></p>
+    <button onclick="window.location.href='index.html'" class="back-btn">← Back to Home</button>
+  </div>
+  <script type="module" src="login.js"></script>
+<p id="error-message" style="color: red;"></p>
+</body>
+</html>
