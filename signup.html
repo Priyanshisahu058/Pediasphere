@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up | PediaSphere</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 50%, #fff 100%);
+      min-height: 100vh;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .signup-container {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      margin: 20px 0;
+      animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .back-button {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #00796b;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+
+    .back-button:hover {
+      background: #00796b;
+      color: white;
+      transform: translateX(-2px);
+    }
+
+    .signup-form {
+      padding: 60px 25px 30px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .signup-form h2 {
+      text-align: center;
+      margin-bottom: 8px;
+      color: #00796b;
+      font-size: 1.8em;
+      font-weight: 600;
+    }
+
+    .signup-form h3 {
+      margin: 25px 0 15px 0;
+      color: #00695c;
+      font-size: 1.1em;
+      font-weight: 600;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e0f2f1;
+      position: relative;
+    }
+
+    .signup-form h3::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: #00796b;
+    }
+
+    .input-group {
+      position: relative;
+      margin: 12px 0;
+    }
+
+    .signup-form input,
+    .signup-form select {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.9);
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .signup-form input:focus,
+    .signup-form select:focus {
+      border-color: #00796b;
+      box-shadow: 0 0 0 3px rgba(0, 121, 107, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .signup-form input::placeholder {
+      color: #999;
+      font-weight: 400;
+    }
+
+    .signup-form select {
+      cursor: pointer;
+      color: #333;
+    }
+
+    .signup-form select option {
+      padding: 10px;
+    }
+
+    .submit-btn {
+      margin-top: 25px;
+      background: linear-gradient(135deg, #00796b, #004d40);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 121, 107, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 121, 107, 0.4);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Mobile Optimizations */
+    @media (max-width: 480px) {
+      body {
+        padding: 5px;
+      }
+
+      .signup-container {
+        margin: 10px 0;
+        border-radius: 12px;
+      }
+
+      .signup-form {
+        padding: 50px 20px 25px;
+      }
+
+      .signup-form h2 {
+        font-size: 1.6em;
+        margin-bottom: 5px;
+      }
+
+      .signup-form h3 {
+        font-size: 1em;
+        margin: 20px 0 12px 0;
+      }
+
+      .input-group {
+        margin: 10px 0;
+      }
+
+      .signup-form input,
+      .signup-form select {
+        padding: 12px 14px;
+        font-size: 16px; /* Prevents zoom on iOS */
+      }
+
+      .submit-btn {
+        padding: 14px;
+        font-size: 15px;
+      }
+
+      .back-button {
+        top: 12px;
+        left: 12px;
+        padding: 6px 10px;
+        font-size: 13px;
+      }
+    }
+
+    /* Very small screens */
+    @media (max-width: 320px) {
+      .signup-form {
+        padding: 45px 15px 20px;
+      }
+
+      .signup-form h2 {
+        font-size: 1.4em;
+      }
+    }
+
+    /* Landscape phones */
+    @media (max-height: 600px) and (orientation: landscape) {
+      body {
+        align-items: flex-start;
+        padding-top: 20px;
+      }
+
+      .signup-container {
+        margin: 10px 0 20px 0;
+      }
+    }
+
+    /* Loading animation for form submission */
+    .submit-btn.loading {
+      background: #ccc;
+      cursor: not-allowed;
+      position: relative;
+      color: transparent;
+    }
+
+    .submit-btn.loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin: -10px 0 0 -10px;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="signup-container">
+    <button class="back-button" onclick="goBack()">← Back</button>
+    
+    <form id="signupForm" class="signup-form">
+      <h2>👩‍👦 PediaSphere</h2>
+
+      <h3>👨‍👩‍👧 Guardian Details</h3>
+      
+      <div class="input-group">
+        <input type="text" id="userName" placeholder="Full Name" required />
+      </div>
+      
+      <div class="input-group">
+        <input type="email" id="email" placeholder="Email Address" required />
+      </div>
+      
+      <div class="input-group">
+        <input type="tel" id="phone" placeholder="Phone Number" required />
+      </div>
+      
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Create Password" required />
+      </div>
+
+      <h3>🧒 Child Details</h3>
+      
+      <div class="input-group">
+        <input type="text" id="childName" placeholder="Child's Name" required />
+      </div>
+      
+      <div class="input-group">
+        <input type="number" id="childAge" placeholder="Child's Age" min="0" max="18" required />
+      </div>
+
+      <div class="input-group">
+        <select id="childGender" required>
+          <option value="" disabled selected>Child's Gender</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <input type="text" id="allergy" placeholder="Known Allergies (optional)" />
+      </div>
+      
+      <div class="input-group">
+        <select id="foodType" required>
+          <option value="" disabled selected>Food Preference</option>
+          <option value="Vegetarian">Vegetarian</option>
+          <option value="Non-Vegetarian">Non-Vegetarian</option>
+          <option value="Vegan">Vegan</option>
+        </select>
+      </div>
+      
+      <div class="input-group">
+        <input type="text" id="country" placeholder="Country" required />
+      </div>
+
+      <button type="submit" class="submit-btn">Create Account</button>
+    </form>
+  </div>
+
+  <script>
+    // Form handling
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const submitBtn = document.querySelector('.submit-btn');
+      submitBtn.classList.add('loading');
+      submitBtn.textContent = 'Creating Account...';
+      
+      // Simulate form submission
+      setTimeout(() => {
+        alert('Account created successfully!');
+        submitBtn.classList.remove('loading');
+        submitBtn.textContent = 'Create Account';
+        
+        // Reset form or redirect
+        // this.reset();
+      }, 2000);
+    });
+
+    // Back button functionality
+    function goBack() {
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.location.href = 'index.html';
+      }
+    }
+
+    // Prevent zoom on iOS when focusing inputs
+    document.addEventListener('touchstart', function() {}, true);
+
+    // Auto-resize for very small screens
+    function adjustForScreenSize() {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+
+    window.addEventListener('resize', adjustForScreenSize);
+    adjustForScreenSize();
+  </script>
+</body>
+</html>
