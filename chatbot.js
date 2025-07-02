@@ -1,7 +1,7 @@
 // Pediasphere Chatbot with Groq API Integration - Complete Version
 class PediasphereChatbot {
     constructor() {
-        this.apiKey = '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';
+        this.apiKey = 'process.env.GROQ_API_KEY';
         this.apiUrl = 'https://api.groq.com/openai/v1/chat/completions';
         this.chatHistory = this.loadChatHistory();
         this.isListening = false;
